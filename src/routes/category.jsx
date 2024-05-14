@@ -1,170 +1,28 @@
+import { useState } from "react";
 import Button from "../components/button/button";
+import { useEffect } from "react";
+import { api } from "../services/axios";
 
 export default function Category() {
-  const incomeCategories = [
-    {
-      id: 1,
-      name: "Category 1",
-      categoryType: "INCOME",
-      subcategories: [
-        {
-          id: 1,
-          name: "Subcategory 1.1",
-        },
-        {
-          id: 2,
-          name: "Subcategory 1.2",
-        },
-        {
-          id: 3,
-          name: "Subcategory 1.3",
-        },
-      ],
-    },
-    {
-      id: 2,
-      name: "Category 2",
-      categoryType: "INCOME",
-      subcategories: [
-        {
-          id: 1,
-          name: "Subcategory 2.1",
-        },
-        {
-          id: 2,
-          name: "Subcategory 2.2",
-        },
-      ],
-    },
-    {
-      id: 3,
-      name: "Category 3",
-      categoryType: "INCOME",
-      subcategories: [
-        {
-          id: 1,
-          name: "Subcategory 3.1",
-        },
-        {
-          id: 2,
-          name: "Subcategory 3.2",
-        },
-        {
-          id: 3,
-          name: "Subcategory 3.3",
-        },
-        {
-          id: 2,
-          name: "Subcategory 3.4",
-        },
-      ],
-    },
-    {
-      id: 4,
-      name: "Category 3",
-      categoryType: "INCOME",
-      subcategories: [
-        {
-          id: 1,
-          name: "Subcategory 3.1",
-        },
-        {
-          id: 2,
-          name: "Subcategory 3.2",
-        },
-        {
-          id: 3,
-          name: "Subcategory 3.3",
-        },
-        {
-          id: 2,
-          name: "Subcategory 3.4",
-        },
-      ],
-    },
-    {
-      id: 5,
-      name: "Category 3",
-      categoryType: "INCOME",
-      subcategories: [
-        {
-          id: 1,
-          name: "Subcategory 3.1",
-        },
-        {
-          id: 2,
-          name: "Subcategory 3.2",
-        },
-        {
-          id: 3,
-          name: "Subcategory 3.3",
-        },
-        {
-          id: 2,
-          name: "Subcategory 3.4",
-        },
-      ],
-    },
-  ];
-  const expenseCategories = [
-    {
-      id: 1,
-      name: "Category 1",
-      categoryType: "EXPENSE",
-      subcategories: [
-        {
-          id: 1,
-          name: "Subcategory 1.1",
-        },
-        {
-          id: 2,
-          name: "Subcategory 1.2",
-        },
-        {
-          id: 3,
-          name: "Subcategory 1.3",
-        },
-      ],
-    },
-    {
-      id: 2,
-      name: "Category 2",
-      categoryType: "EXPENSE",
-      subcategories: [
-        {
-          id: 1,
-          name: "Subcategory 2.1",
-        },
-        {
-          id: 2,
-          name: "Subcategory 2.2",
-        },
-      ],
-    },
-    {
-      id: 3,
-      name: "Category 3",
-      categoryType: "EXPENSE",
-      subcategories: [
-        {
-          id: 1,
-          name: "Subcategory 3.1",
-        },
-        {
-          id: 2,
-          name: "Subcategory 3.2",
-        },
-        {
-          id: 3,
-          name: "Subcategory 3.3",
-        },
-        {
-          id: 2,
-          name: "Subcategory 3.4",
-        },
-      ],
-    },
-  ];
+  const [incomeCategories, setIncomeCategories] = useState([]);
+  const [expenseCategories, setExpenseCategories] = useState([]);
+
+  useEffect(() => {
+    api
+      .get("/categories")
+      .then((res) => {
+        const income = res.data.filter(
+          (category) => category.categoryType === "INCOME"
+        );
+        const expense = res.data.filter(
+          (category) => category.categoryType === "EXPENSE"
+        );
+
+        setIncomeCategories(income);
+        setExpenseCategories(expense);
+      })
+      .catch((error) => console.log(error));
+  }, []);
 
   return (
     <div>

@@ -1,33 +1,17 @@
+import { useEffect, useState } from "react";
 import Button from "../components/button/button";
 import Tag from "../components/tag/tag";
+import { api } from "../services/axios";
 
 export default function Tags() {
-  const tags = [
-    {
-      id: 1,
-      name: "Tag A",
-    },
-    {
-      id: 2,
-      name: "Tag B",
-    },
-    {
-      id: 3,
-      name: "Tag C",
-    },
-    {
-      id: 4,
-      name: "Tag D",
-    },
-    {
-      id: 5,
-      name: "Alimentação",
-    },
-    {
-      id: 6,
-      name: "helicoptero",
-    },
-  ];
+  const [tags, setTags] = useState([]);
+
+  useEffect(() => {
+    api
+      .get("/tags")
+      .then((res) => setTags(res.data))
+      .catch((error) => console.log(error));
+  }, []);
 
   return (
     <div>

@@ -1,7 +1,16 @@
 import AccountCard from "../components/accountCard/account";
 import Button from "../components/button/button";
+import { api } from "../services/axios";
+import { useState, useEffect } from "react";
 
 export default function Account() {
+  const [accounts, setAccounts] = useState([]);
+  useEffect(() => {
+    api
+      .get("/accounts")
+      .then((res) => setAccounts(res.data))
+      .catch((error) => console.log(error));
+  }, []);
   return (
     <div>
       <div>
@@ -15,8 +24,17 @@ export default function Account() {
         </section>
         <hr className="mb-4" />
         <div className="flex gap-2">
-          <AccountCard name="Nubank" balance="56,70" />
-          <AccountCard name="Carteira" balance="4.556,60" />
+          {accounts.length ? (
+            accounts.map((account) => (
+              <AccountCard
+                key={account.id}
+                name={account.name}
+                balance={account.balance}
+              />
+            ))
+          ) : (
+            <div>There are no Account registered yet</div>
+          )}
         </div>
       </div>
     </div>

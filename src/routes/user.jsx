@@ -1,40 +1,18 @@
 import { VscEdit, VscTrash } from "react-icons/vsc";
 import Button from "../components/button/button";
 import SearchInput from "../components/searchInput/searchInput";
+import { useEffect, useState } from "react";
+import { api } from "../services/axios";
 
 export default function User() {
-  const users = [
-    {
-      id: 1,
-      username: "eiericksilva",
-      firstName: "Erick",
-      lastName: "Oliveira da Silva",
-    },
-    {
-      id: 2,
-      username: "Bê",
-      firstName: "Evelyn",
-      lastName: "Fernanda Ferreira dos Reis",
-    },
-    {
-      id: 3,
-      username: "Cida",
-      firstName: "Aparecida",
-      lastName: "Oliveira da Silva",
-    },
-    {
-      id: 4,
-      username: "Cida",
-      firstName: "Aparecida",
-      lastName: "Oliveira da Silva",
-    },
-    {
-      id: 5,
-      username: "Cida",
-      firstName: "Aparecida",
-      lastName: "Oliveira da Silva",
-    },
-  ];
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    api
+      .get("/users")
+      .then((res) => setUsers(res.data))
+      .catch((error) => console.log(error));
+  }, []);
 
   return (
     <div id="user">
