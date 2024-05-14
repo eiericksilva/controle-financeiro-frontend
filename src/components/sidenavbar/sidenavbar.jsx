@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 
 const SideNavbar = () => {
   return (
-    <div className="p-4">
+    <div className="p-4 border-r-2">
       <nav className="w-60">
         <ul>
           <li className="flex items-center gap-3 p-2 hover:bg-slate-100 cursor-pointer">

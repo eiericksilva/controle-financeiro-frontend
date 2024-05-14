@@ -1,3 +1,4 @@
+import { VscEdit, VscTrash } from "react-icons/vsc";
 import Button from "../components/button/button";
 import Searchbar from "../components/searchbar/searchbar";
 
@@ -69,15 +70,9 @@ export default function User() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     {user.lastName}{" "}
                   </td>
-                  <td className="gap-2">
-                    <Button
-                      title="Delete"
-                      className="bg-red-200 p-1 font-thin mx-1"
-                    />
-                    <Button
-                      title="Edit"
-                      className="bg-blue-200 p-1 font-thin"
-                    />
+                  <td className="gap-2 flex items-center py-4">
+                    <VscEdit className="hover:cursor-pointer" />
+                    <VscTrash className="hover:cursor-pointer" />
                   </td>
                 </tr>
               ))

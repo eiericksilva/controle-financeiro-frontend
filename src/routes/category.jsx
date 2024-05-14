@@ -127,9 +127,11 @@ export default function Category() {
         <Button title="New Category" className="text-sm bg-amber-500" />
       </header>
       <hr className="my-4" />
-      <div className="flex justify-between">
-        <div className="w-[50%]">
+      <div className="flex justify-between gap-1">
+        <div className="w-[50%] bg-slate-100 rounded-md p-4">
           <h1 className="text-2xl pb-4">Income</h1>
+          <hr className="mb-2 border border-gray-100" />
+
           {incomeCategories ? (
             incomeCategories.map((category) => (
               <ul key={category.id}>
@@ -145,8 +147,9 @@ export default function Category() {
             <span> There are no Income Categories registered yet</span>
           )}
         </div>
-        <div className="  w-[50%]">
+        <div className="  w-[50%]   bg-slate-100 rounded-md p-4">
           <h1 className="text-2xl pb-4">Expense</h1>
+          <hr className="mb-2 border border-gray-100" />
           {expenseCategories ? (
             expenseCategories.map((category) => (
               <ul key={category.id}>
