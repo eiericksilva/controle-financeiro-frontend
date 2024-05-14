@@ -4,11 +4,11 @@ import SideNavbar from "../components/sidenavbar/sidenavbar";
 
 export default function Root() {
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-      <div className="flex">
+      <div className="flex flex-1">
         <SideNavbar />
-        <div className="p-4 w-full">
+        <div className="p-4 flex-1 overflow-scroll">
           <Outlet />
         </div>
       </div>

@@ -2,6 +2,7 @@ import { VscEdit, VscTrash } from "react-icons/vsc";
 import Tag from "../components/tag/tag";
 import { FcCheckmark } from "react-icons/fc";
 import { TfiAlert } from "react-icons/tfi";
+import { BsArrowRight } from "react-icons/bs";
 
 export default function Transaction() {
   const transactions = [
@@ -459,34 +460,111 @@ export default function Transaction() {
     },
   ];
 
+  const tags = [
+    {
+      id: 1,
+      name: "Tag A",
+    },
+    {
+      id: 2,
+      name: "Tag B",
+    },
+    {
+      id: 3,
+      name: "Tag C",
+    },
+    {
+      id: 4,
+      name: "Tag D",
+    },
+    {
+      id: 5,
+      name: "Alimentação",
+    },
+    {
+      id: 6,
+      name: "helicoptero",
+    },
+  ];
+
   return (
-    <div>
+    <div className="">
       <div>
         <h1 className="text-3xl pb-4">Transaction Query</h1>
         <hr />
-        <div>
-          <h1>Filtros</h1>
-          <div className="flex">
+        <div className="mt-2">
+          <div
+            id="containerFilter"
+            className="flex bg-amber-50 min-w-60 rounded-lg shadow-sm gap-4 flex-1 justify-between items-start"
+          >
             <div>
-              <span>de | para </span>
+              <label
+                htmlFor="search_id"
+                className="block text-sm font-medium leading-5 text-gray-700"
+              >
+                ID:
+              </label>
+              <input
+                type="text"
+                name="search_id"
+                id="search_id"
+                className="mt-1 form-input block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
+              />
             </div>
-            <div>
-              <div>categories</div>
+
+            <div className="flex items-center justify-center flex-col">
+              <div className="flex items-center">
+                <label htmlFor="fromDate">De</label>{" "}
+                <input
+                  type="date"
+                  id="fromDate"
+                  className="data border border-gray-300 rounded-md"
+                />
+              </div>
+              <span>
+                <BsArrowRight />
+              </span>
+              <div className="flex items-center">
+                <label htmlFor="toDate">Até</label>{" "}
+                <input
+                  type="date"
+                  id="toDate"
+                  className="data border border-gray-300 rounded-md"
+                />
+              </div>
             </div>
-            <div>
-              <div>conta</div>
+
+            <div className="w-full max-w-xs">
+              <label
+                htmlFor="category_type"
+                className="block text-sm font-medium leading-5 text-gray-700"
+              >
+                Transaction Type
+              </label>
+              <select
+                id="category_type"
+                name="category_type"
+                className="mt-1 form-select block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
+              >
+                <option value="INCOME">Income</option>
+                <option value="EXPENSE">Expense</option>
+                <option value="TRANSFER">Transfer</option>
+              </select>
             </div>
+
             <div>
-              <div>tag</div>
-            </div>
-            <div>
-              <div>status</div>
-            </div>
-            <div>
-              <div>tipo</div>
+              <label htmlFor="tagFilter">Tag:</label>
+              <select id="tagFilter">
+                <option value="">Todas as Tags</option>
+                {tags.map((tag) => (
+                  <option key={tag.id} value={tag.name}>
+                    {tag.name}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
-          <div>
+          <div className="overflow-x-scroll">
             <table className="min-w-full divide-y divide-gray-200">
               <thead>
                 <tr>
@@ -538,7 +616,10 @@ export default function Transaction() {
               <tbody>
                 {transactions.length ? (
                   transactions.map((transaction) => (
-                    <tr key={transaction.id}>
+                    <tr
+                      key={transaction.id}
+                      className="hover:bg-orange-200 transition delay-75"
+                    >
                       <td className="px-6 py-4 whitespace-nowrap">
                         {transaction.id}
                       </td>

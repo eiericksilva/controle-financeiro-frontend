@@ -1,11 +1,12 @@
 import { CiSearch } from "react-icons/ci";
 
-const Searchbar = () => {
+// eslint-disable-next-line react/prop-types
+const SearchInput = ({ placeholder }) => {
   return (
     <div className="relative">
       <input
         className="border outline-none rounded-full w-96 p-2"
-        placeholder="Search user"
+        placeholder={placeholder}
       />
       <button className="absolute top-[25%] right-4">
         <CiSearch size={20} />
@@ -13,7 +14,5 @@ const Searchbar = () => {
     </div>
   );
 };
-/* top: '50%',
-          right: '10px',
-          transform: 'translateY(-50%)', */
-export default Searchbar;
+
+export default SearchInput;

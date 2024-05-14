@@ -1,6 +1,6 @@
 import { VscEdit, VscTrash } from "react-icons/vsc";
 import Button from "../components/button/button";
-import Searchbar from "../components/searchbar/searchbar";
+import SearchInput from "../components/searchInput/searchInput";
 
 export default function User() {
   const users = [
@@ -22,6 +22,18 @@ export default function User() {
       firstName: "Aparecida",
       lastName: "Oliveira da Silva",
     },
+    {
+      id: 4,
+      username: "Cida",
+      firstName: "Aparecida",
+      lastName: "Oliveira da Silva",
+    },
+    {
+      id: 5,
+      username: "Cida",
+      firstName: "Aparecida",
+      lastName: "Oliveira da Silva",
+    },
   ];
 
   return (
@@ -33,7 +45,7 @@ export default function User() {
         </header>
         <section className="flex items-center justify-between">
           <h2 className="text-2xl pb-4">Users</h2>
-          <Searchbar />
+          <SearchInput placeholder="Search User" />
           <Button title="New User" />
         </section>
         <table className="min-w-full divide-y divide-gray-200">
@@ -59,7 +71,10 @@ export default function User() {
           <tbody>
             {users.length ? (
               users.map((user) => (
-                <tr key={user.id}>
+                <tr
+                  key={user.id}
+                  className="hover:bg-orange-200 transition delay-75"
+                >
                   <td className="px-6 py-4 whitespace-nowrap">{user.id}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {user.username}
