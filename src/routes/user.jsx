@@ -3,19 +3,51 @@ import Button from "../components/button/button";
 import SearchInput from "../components/searchInput/searchInput";
 import { useEffect, useState } from "react";
 import { api } from "../services/axios";
+import UserModal from "../components/userModal/userModal";
 
 export default function User() {
+  const [currentUser, setCurrentUser] = useState(null);
   const [users, setUsers] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
+  const refreshUsers = () => {
     api
       .get("/users")
-      .then((res) => setUsers(res.data))
+      .then((res) => {
+        setUsers(res.data);
+        setCurrentUser(null);
+      })
       .catch((error) => console.log(error));
+  };
+
+  useEffect(() => {
+    refreshUsers();
   }, []);
+
+  const handleTrashUser = (userId) => {
+    api
+      .delete(`/users/${userId}`)
+      .then((res) => {
+        setCurrentUser(null);
+        refreshUsers();
+      })
+      .catch((error) => console.log(error));
+  };
+
+  const handleEditUser = (user) => {
+    setCurrentUser(user);
+    setIsOpen(true);
+  };
 
   return (
     <div id="user">
+      <UserModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        currentUser={currentUser}
+        setCurrentUser={setCurrentUser}
+        refreshUsers={refreshUsers}
+      />
       <div>
         <header>
           <h1 className="text-3xl pb-4">User Query</h1>
@@ -24,7 +56,7 @@ export default function User() {
         <section className="flex items-center justify-between">
           <h2 className="text-2xl pb-4">Users</h2>
           <SearchInput placeholder="Search User" />
-          <Button title="New User" />
+          <Button title="New User" onClick={() => setIsOpen(true)} />
         </section>
         <table className="min-w-full divide-y divide-gray-200">
           <thead>
@@ -64,8 +96,14 @@ export default function User() {
                     {user.lastName}{" "}
                   </td>
                   <td className="gap-2 flex items-center py-4">
-                    <VscEdit className="hover:cursor-pointer" />
-                    <VscTrash className="hover:cursor-pointer" />
+                    <VscEdit
+                      className="hover:cursor-pointer"
+                      onClick={() => handleEditUser(user)}
+                    />
+                    <VscTrash
+                      className="hover:cursor-pointer"
+                      onClick={() => handleTrashUser(user.id)}
+                    />
                   </td>
                 </tr>
               ))
