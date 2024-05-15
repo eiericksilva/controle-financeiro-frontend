@@ -144,12 +144,7 @@ export default function Transaction() {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Expired Date
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Description
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Observation
-                  </th>
+
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Is Confirmed
                   </th>
@@ -193,12 +188,7 @@ export default function Transaction() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         {transaction.expiredDate}{" "}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {transaction.description}{" "}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {transaction.observation}{" "}
-                      </td>
+
                       <td className="px-6 py-4 whitespace-nowrap">
                         {transaction.isConfirmed ? (
                           <FcCheckmark />

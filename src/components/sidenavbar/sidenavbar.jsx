@@ -6,10 +6,10 @@ import { Link } from "react-router-dom";
 
 const SideNavbar = () => {
   return (
-    <div className="p-4 border-r-2 bg-yellow-100">
+    <div className="p-4 border-r-2">
       <nav className="w-60">
         <ul>
-          <Link className="w-full :cursor-pointer z-10 " to={`/account`}>
+          <Link className="w-full :cursor-pointer  z-10 " to={`/account`}>
             <li className="flex items-center gap-3 py-2  hover:text-red-950">
               <CiWallet size={22} />
               Account
