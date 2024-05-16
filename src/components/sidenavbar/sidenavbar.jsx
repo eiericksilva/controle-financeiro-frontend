@@ -4,9 +4,9 @@ import { SlTag } from "react-icons/sl";
 import { TbCategory } from "react-icons/tb";
 import { Link } from "react-router-dom";
 
-const SideNavbar = () => {
+const SideNavbar = ({ sidenavbarIsOpen }) => {
   return (
-    <div className="p-4 border-r-2">
+    <div className={`p-4 border-r-2 ${sidenavbarIsOpen ? "" : "hidden"}`}>
       <nav className="w-60">
         <ul>
           <Link className="w-full :cursor-pointer  z-10 " to={`/account`}>

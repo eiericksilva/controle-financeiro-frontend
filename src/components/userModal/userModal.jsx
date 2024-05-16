@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api } from "../../services/axios";
+import Button from "../button/button";
 
 // eslint-disable-next-line react/prop-types
 const UserModal = ({
@@ -62,13 +63,13 @@ const UserModal = ({
 
   return (
     <div className="z-10 fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-8 rounded-lg">
+      <div className="bg-white p-8 rounded-lg shadow-lg">
         <h2 className="text-xl font-bold mb-4">
           {currentUser ? "Edit User" : "Create User"}
         </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="username" className="block font-semibold mb-1">
+            <label htmlFor="username" className="block mb-1">
               Username
             </label>
             <input
@@ -80,7 +81,7 @@ const UserModal = ({
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="firstName" className="block font-semibold mb-1">
+            <label htmlFor="firstName" className="block mb-1">
               First Name
             </label>
             <input
@@ -92,7 +93,7 @@ const UserModal = ({
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="lastName" className="block font-semibold mb-1">
+            <label htmlFor="lastName" className="block mb-1">
               Last Name
             </label>
             <input
@@ -103,14 +104,14 @@ const UserModal = ({
               className="w-full border rounded px-3 py-2"
             />
           </div>
-          <div className="text-right">
-            <button
+          <div className="text-right flex justify-between">
+            <Button
               type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              className="px-4 py-2"
               onClick={handleSubmit}
-            >
-              Create
-            </button>
+              title="Create"
+            />
+
             <button
               onClick={handleClose}
               type="button"

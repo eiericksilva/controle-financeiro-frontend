@@ -8,6 +8,7 @@ import { api } from "../services/axios";
 
 export default function Transaction() {
   const [transactions, setTransactions] = useState([]);
+  const [tags, setTags] = useState([]);
 
   useEffect(() => {
     api
@@ -16,42 +17,22 @@ export default function Transaction() {
       .catch((error) => console.log(error));
   }, []);
 
-  const tags = [
-    {
-      id: 1,
-      name: "Tag A",
-    },
-    {
-      id: 2,
-      name: "Tag B",
-    },
-    {
-      id: 3,
-      name: "Tag C",
-    },
-    {
-      id: 4,
-      name: "Tag D",
-    },
-    {
-      id: 5,
-      name: "Alimentação",
-    },
-    {
-      id: 6,
-      name: "helicoptero",
-    },
-  ];
+  useEffect(() => {
+    api
+      .get("/tags")
+      .then((res) => setTags(res.data))
+      .catch((error) => console.log(error));
+  }, []);
 
   return (
     <div className="">
       <div>
-        <h1 className="text-3xl pb-4">Transaction Query</h1>
+        <h1 className="text-3xl py-4">Transaction Query</h1>
         <hr />
-        <div className="mt-2">
+        <div>
           <div
             id="containerFilter"
-            className="flex bg-amber-50 min-w-60 rounded-lg shadow-sm gap-4 flex-1 justify-between items-start"
+            className="flex p-4 py-8 mb-8 min-w-60 rounded-lg  gap-4 flex-1 justify-between items-start shadow-lg"
           >
             <div>
               <label
@@ -108,9 +89,17 @@ export default function Transaction() {
               </select>
             </div>
 
-            <div>
-              <label htmlFor="tagFilter">Tag:</label>
-              <select id="tagFilter">
+            <div className="mb-4">
+              <label
+                htmlFor="tagFilter"
+                className="block text-sm font-medium leading-5 text-gray-700"
+              >
+                Tag
+              </label>
+              <select
+                id="tagFilter"
+                className="mt-1 form-select block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
+              >
                 <option value="">Todas as Tags</option>
                 {tags.map((tag) => (
                   <option key={tag.id} value={tag.name}>
@@ -167,7 +156,7 @@ export default function Transaction() {
                   transactions.map((transaction) => (
                     <tr
                       key={transaction.id}
-                      className="hover:bg-orange-200 transition delay-75"
+                      className="hover:bg-amber-100 transition delay-75"
                     >
                       <td className="px-6 py-4 whitespace-nowrap">
                         {transaction.id}

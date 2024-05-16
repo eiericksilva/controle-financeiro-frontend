@@ -1,3 +1,4 @@
+import { AiOutlinePlus } from "react-icons/ai";
 import AccountCard from "../components/accountCard/account";
 import Button from "../components/button/button";
 import { api } from "../services/axios";
@@ -15,14 +16,16 @@ export default function Account() {
     <div>
       <div>
         <header>
-          <h1 className="text-3xl pb-4">Account Query</h1>
+          <h1 className="text-3xl py-4">Account Query</h1>
           <hr className="py-4" />
         </header>
         <section className="flex items-center justify-between">
-          <h2 className="text-2xl pb-4">Accounts</h2>
-          <Button title="New Account" />
+          <h2 className="text-2xl">Accounts</h2>
+          <Button title="New Account">
+            <AiOutlinePlus />
+          </Button>
         </section>
-        <hr className="mb-4" />
+        <hr className="my-4" />
         <div className="flex gap-2">
           {accounts.length ? (
             accounts.map((account) => (

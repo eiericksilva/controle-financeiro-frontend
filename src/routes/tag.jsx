@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Button from "../components/button/button";
 import Tag from "../components/tag/tag";
 import { api } from "../services/axios";
+import { AiOutlinePlus } from "react-icons/ai";
 
 export default function Tags() {
   const [tags, setTags] = useState([]);
@@ -16,10 +17,12 @@ export default function Tags() {
   return (
     <div>
       <header className="flex justify-between">
-        <h1 className="text-3xl pb-4">Tag Query</h1>
-        <Button title="New Tag" className="text-sm bg-amber-500" />
+        <h1 className="text-3xl py-4">Tag Query</h1>
+        <Button title="New Tag" className="text-sm">
+          <AiOutlinePlus />
+        </Button>
       </header>
-      <hr className="my-4" />
+      <hr className="" />
       <ul className="flex">
         {tags && tags.map((tag) => <Tag key={tag.id} name={tag.name} />)}
       </ul>
