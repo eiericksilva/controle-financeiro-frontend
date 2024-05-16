@@ -1,15 +1,16 @@
 import PropTypes from "prop-types";
-import { AiOutlinePlus } from "react-icons/ai";
 
-const Button = ({ title, className, onClick }) => {
+const Button = ({ title, className, onClick, children }) => {
   return (
-    <button
-      onClick={onClick}
-      className={`bg-amber-100 p-2 rounded-md min-w-28 ${className} shadow-md flex items-center gap-2 border`}
-    >
-      <AiOutlinePlus size={22} />
-      {title}
-    </button>
+    <div className="flex items-center">
+      <button
+        onClick={onClick}
+        className={`bg-amber-100 hover:bg-amber-100 p-2 rounded-md min-w-28 shadow-md flex items-center justify-center gap-2 border text-sm ${className} `}
+      >
+        {children}
+        {title}
+      </button>
+    </div>
   );
 };
 

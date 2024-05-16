@@ -2,6 +2,7 @@ import { useState } from "react";
 import Button from "../components/button/button";
 import { useEffect } from "react";
 import { api } from "../services/axios";
+import { AiOutlinePlus } from "react-icons/ai";
 
 export default function Category() {
   const [incomeCategories, setIncomeCategories] = useState([]);
@@ -27,8 +28,10 @@ export default function Category() {
   return (
     <div>
       <header className="flex justify-between ">
-        <h1 className="text-3xl pb-4">Category Query</h1>
-        <Button title="New Category" className="text-sm bg-amber-500" />
+        <h1 className="text-3xl py-4">Category Query</h1>
+        <Button title="New Category">
+          <AiOutlinePlus />
+        </Button>
       </header>
       <hr className="my-4" />
       <div className="flex justify-between gap-1 ">

@@ -4,6 +4,7 @@ import SearchInput from "../components/searchInput/searchInput";
 import { useEffect, useState } from "react";
 import { api } from "../services/axios";
 import UserModal from "../components/userModal/userModal";
+import { AiOutlinePlus } from "react-icons/ai";
 
 export default function User() {
   const [currentUser, setCurrentUser] = useState(null);
@@ -50,13 +51,15 @@ export default function User() {
       />
       <div>
         <header>
-          <h1 className="text-3xl pb-4">User Query</h1>
-          <hr className="py-4" />
+          <h1 className="text-3xl py-4">User Query</h1>
+          <hr />
         </header>
-        <section className="flex items-center justify-between">
-          <h2 className="text-2xl pb-4">Users</h2>
+        <section className="flex items-center justify-between py-4">
+          <h2 className="text-2xl">Users</h2>
           <SearchInput placeholder="Search User" />
-          <Button title="New User" onClick={() => setIsOpen(true)} />
+          <Button title="New User" onClick={() => setIsOpen(true)}>
+            <AiOutlinePlus />
+          </Button>
         </section>
         <table className="min-w-full divide-y divide-gray-200">
           <thead>
@@ -83,7 +86,7 @@ export default function User() {
               users.map((user) => (
                 <tr
                   key={user.id}
-                  className="hover:bg-orange-200 transition delay-75"
+                  className="hover:bg-amber-100 transition delay-75"
                 >
                   <td className="px-6 py-4 whitespace-nowrap">{user.id}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
