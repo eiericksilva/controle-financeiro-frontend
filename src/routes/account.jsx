@@ -3,6 +3,7 @@ import AccountCard from "../components/accountCard/account";
 import Button from "../components/button/button";
 import { api } from "../services/axios";
 import { useState, useEffect } from "react";
+import { formatCurrency } from "../utils/formatCurrency";
 
 export default function Account() {
   const [accounts, setAccounts] = useState([]);
@@ -32,7 +33,7 @@ export default function Account() {
               <AccountCard
                 key={account.id}
                 name={account.name}
-                balance={account.balance}
+                balance={formatCurrency(account.balance)}
               />
             ))
           ) : (
