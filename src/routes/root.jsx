@@ -4,7 +4,7 @@ import SideNavbar from "../components/sidenavbar/sidenavbar";
 import { useState } from "react";
 
 export default function Root() {
-  const [sidenavbarIsOpen, setSidenavbarIsOpen] = useState(false);
+  const [sidenavbarIsOpen, setSidenavbarIsOpen] = useState(true);
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar

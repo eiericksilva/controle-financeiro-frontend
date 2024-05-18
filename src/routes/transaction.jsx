@@ -1,20 +1,20 @@
-import { VscEdit, VscTrash } from "react-icons/vsc";
+import { VscTrash } from "react-icons/vsc";
 import Tag from "../components/tag/tag";
 import { FcCheckmark } from "react-icons/fc";
 import { TfiAlert } from "react-icons/tfi";
 import { BsArrowRight } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import { api } from "../services/axios";
+import Button from "../components/button/button";
+import { AiOutlinePlus } from "react-icons/ai";
+import { formatCurrency } from "../utils/formatCurrency";
 
 export default function Transaction() {
   const [transactions, setTransactions] = useState([]);
   const [tags, setTags] = useState([]);
 
   useEffect(() => {
-    api
-      .get("/transactions")
-      .then((res) => setTransactions(res.data))
-      .catch((error) => console.log(error));
+    fetchTransactions();
   }, []);
 
   useEffect(() => {
@@ -23,6 +23,23 @@ export default function Transaction() {
       .then((res) => setTags(res.data))
       .catch((error) => console.log(error));
   }, []);
+
+  const fetchTransactions = () => {
+    api
+      .get("/transactions")
+      .then((res) => setTransactions(res.data))
+      .catch((error) => console.log(error));
+  };
+
+  const handleTrashTransaction = (transactionId) => {
+    api
+      .delete(`/transactions/${transactionId}`)
+      .then((res) => {
+        console.log(res);
+        fetchTransactions();
+      })
+      .catch((error) => console.log(error));
+  };
 
   return (
     <div className="">
@@ -109,6 +126,17 @@ export default function Transaction() {
               </select>
             </div>
           </div>
+          <section className="flex items-center justify-between py-4">
+            <div className=" items-center gap-1">
+              <h2 className="text-2xl">Transactions</h2>
+              <span className="text-sm font-thin">
+                (Clique em uma Transaction para ver detalhes)
+              </span>
+            </div>
+            <Button title="New Transaction" onClick={() => {}}>
+              <AiOutlinePlus />
+            </Button>
+          </section>
           <div className="overflow-x-scroll">
             <table className="min-w-full divide-y divide-gray-200">
               <thead>
@@ -166,7 +194,7 @@ export default function Transaction() {
                         {transaction.transactionType}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        {transaction.amount}{" "}
+                        {formatCurrency(transaction.amount)}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         {transaction?.category?.name}{" "}
@@ -185,20 +213,22 @@ export default function Transaction() {
                           <TfiAlert className="text-red-600" />
                         )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-4 whitespace-nowrap flex">
                         {transaction.tags.map((tag) => (
                           <Tag key={tag.id} name={tag.name} />
                         ))}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        {transaction.sourceAccount?.name}{" "}
+                        {transaction.sourceAccount?.name}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        {transaction.destinationAccount?.name}{" "}
+                        {transaction.destinationAccount?.name}
                       </td>
                       <td className="gap-2 flex items-center py-4">
-                        <VscEdit className="hover:cursor-pointer" />
-                        <VscTrash className="hover:cursor-pointer" />
+                        <VscTrash
+                          className="hover:cursor-pointer"
+                          onClick={() => handleTrashTransaction(transaction.id)}
+                        />
                       </td>
                     </tr>
                   ))
