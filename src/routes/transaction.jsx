@@ -8,20 +8,17 @@ import { api } from "../services/axios";
 import Button from "../components/button/button";
 import { AiOutlinePlus } from "react-icons/ai";
 import { formatCurrency } from "../utils/formatCurrency";
+import DeleteTransactionModal from "../components/DeleteTransactionModal/deleteTransactionModal";
 
 export default function Transaction() {
   const [transactions, setTransactions] = useState([]);
-  const [tags, setTags] = useState([]);
+  const [tags] = useState([]);
+  const [transactionToDelete, setTransactionToDelete] = useState(null);
+  const [deleteTransactionModalIsOpen, setDeleteTransactionModalIsOpen] =
+    useState(false);
 
   useEffect(() => {
     fetchTransactions();
-  }, []);
-
-  useEffect(() => {
-    api
-      .get("/tags")
-      .then((res) => setTags(res.data))
-      .catch((error) => console.log(error));
   }, []);
 
   const fetchTransactions = () => {
@@ -32,17 +29,33 @@ export default function Transaction() {
   };
 
   const handleTrashTransaction = (transactionId) => {
+    setTransactionToDelete(transactionId);
+    setDeleteTransactionModalIsOpen(true);
+  };
+
+  const confirmDeleteTransaction = () => {
+    if (!transactionToDelete) return;
+
     api
-      .delete(`/transactions/${transactionId}`)
+      .delete(`/transactions/${transactionToDelete}`)
       .then((res) => {
         console.log(res);
         fetchTransactions();
       })
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error))
+      .finally(() => {
+        setDeleteTransactionModalIsOpen(false);
+        setTransactionToDelete(null);
+      });
   };
 
   return (
-    <div className="">
+    <div>
+      <DeleteTransactionModal
+        isOpen={deleteTransactionModalIsOpen}
+        onConfirm={confirmDeleteTransaction}
+        onCancel={() => setDeleteTransactionModalIsOpen(false)}
+      />
       <div>
         <h1 className="text-3xl py-4">Transaction Query</h1>
         <hr />
@@ -227,13 +240,15 @@ export default function Transaction() {
                       <td className="gap-2 flex items-center py-4">
                         <VscTrash
                           className="hover:cursor-pointer"
-                          onClick={() => handleTrashTransaction(transaction.id)}
+                          onClick={() => {
+                            handleTrashTransaction(transaction.id);
+                          }}
                         />
                       </td>
                     </tr>
                   ))
                 ) : (
-                  <span>There are no registered transactions</span>
+                  <div>There are no registered transactions</div>
                 )}
               </tbody>
             </table>

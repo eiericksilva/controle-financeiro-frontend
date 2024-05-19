@@ -5,7 +5,7 @@ const Button = ({ title, className, onClick, children }) => {
     <div className="flex items-center">
       <button
         onClick={onClick}
-        className={`bg-amber-100 hover:bg-amber-100 p-2 rounded-md min-w-28 shadow-md flex items-center justify-center gap-2 border text-sm ${className} `}
+        className={`${className} bg-amber-100 p-2 rounded-md min-w-28 shadow-md flex items-center justify-center gap-2 border text-sm`}
       >
         {children}
         {title}
