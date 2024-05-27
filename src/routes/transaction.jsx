@@ -9,22 +9,56 @@ import Button from "../components/button/button";
 import { AiOutlinePlus } from "react-icons/ai";
 import { formatCurrency } from "../utils/formatCurrency";
 import DeleteTransactionModal from "../components/DeleteTransactionModal/deleteTransactionModal";
+import CreateTransactionModal from "../components/createTransactionModal/createTransactionModal";
 
 export default function Transaction() {
   const [transactions, setTransactions] = useState([]);
-  const [tags] = useState([]);
+  const [tags, setTags] = useState([]);
+  const [accounts, setAccounts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [subcategories, setSubcategories] = useState([]);
   const [transactionToDelete, setTransactionToDelete] = useState(null);
   const [deleteTransactionModalIsOpen, setDeleteTransactionModalIsOpen] =
+    useState(false);
+  const [createTransactionModalIsOpen, setCreateTransactionModalIsOpen] =
     useState(false);
 
   useEffect(() => {
     fetchTransactions();
+    fetchTags();
+    fetchCategories();
+    fetchAccounts();
   }, []);
 
   const fetchTransactions = () => {
     api
       .get("/transactions")
       .then((res) => setTransactions(res.data))
+      .catch((error) => console.log(error));
+  };
+  const fetchTags = () => {
+    api
+      .get("/tags")
+      .then((res) => setTags(res.data))
+      .catch((error) => console.log(error));
+  };
+  const fetchCategories = () => {
+    api
+      .get("/categories")
+      .then((res) => {
+        let categories_found = res.data;
+        setCategories(categories_found);
+
+        categories_found.map((c) => {
+          setSubcategories(c.subcategory);
+        });
+      })
+      .catch((error) => console.log(error));
+  };
+  const fetchAccounts = () => {
+    api
+      .get("/accounts")
+      .then((res) => setAccounts(res.data))
       .catch((error) => console.log(error));
   };
 
@@ -55,6 +89,14 @@ export default function Transaction() {
         isOpen={deleteTransactionModalIsOpen}
         onConfirm={confirmDeleteTransaction}
         onCancel={() => setDeleteTransactionModalIsOpen(false)}
+      />
+      <CreateTransactionModal
+        isOpen={createTransactionModalIsOpen}
+        onClose={() => setCreateTransactionModalIsOpen(false)}
+        tags={tags}
+        categories={categories}
+        subcategories={subcategories}
+        accounts={accounts}
       />
       <div>
         <h1 className="text-3xl py-4">Transaction Query</h1>
@@ -146,7 +188,10 @@ export default function Transaction() {
                 (Clique em uma Transaction para ver detalhes)
               </span>
             </div>
-            <Button title="New Transaction" onClick={() => {}}>
+            <Button
+              title="New Transaction"
+              onClick={() => setCreateTransactionModalIsOpen(true)}
+            >
               <AiOutlinePlus />
             </Button>
           </section>
