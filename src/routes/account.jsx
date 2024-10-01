@@ -1,9 +1,10 @@
 import { AiOutlinePlus } from "react-icons/ai";
-import AccountCard from "../components/accountCard/account";
+
 import Button from "../components/button/button";
 import { api } from "../services/axios";
 import { useState, useEffect } from "react";
 import { formatCurrency } from "../utils/formatCurrency";
+import AccountCard from "../components/accountCard/AccountCard";
 
 export default function Account() {
   const [accounts, setAccounts] = useState([]);
@@ -18,10 +19,9 @@ export default function Account() {
       <div>
         <header>
           <h1 className="text-3xl py-4">Account Query</h1>
-          <hr className="py-4" />
         </header>
         <section className="flex items-center justify-between">
-          <h2 className="text-2xl">Accounts</h2>
+          <p className="text-2xl">accounts</p>
           <Button title="New Account">
             <AiOutlinePlus />
           </Button>
@@ -37,7 +37,7 @@ export default function Account() {
               />
             ))
           ) : (
-            <div>There are no Account registered yet</div>
+            <div>There are no account registered yet</div>
           )}
         </div>
       </div>

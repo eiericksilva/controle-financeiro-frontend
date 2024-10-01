@@ -2,14 +2,13 @@ import { VscTrash } from "react-icons/vsc";
 import Tag from "../components/tag/tag";
 import { FcCheckmark } from "react-icons/fc";
 import { TfiAlert } from "react-icons/tfi";
-import { BsArrowRight } from "react-icons/bs";
 import { useEffect, useState } from "react";
 import { api } from "../services/axios";
 import Button from "../components/button/button";
 import { AiOutlinePlus } from "react-icons/ai";
 import { formatCurrency } from "../utils/formatCurrency";
-import DeleteTransactionModal from "../components/DeleteTransactionModal/deleteTransactionModal";
-import CreateTransactionModal from "../components/createTransactionModal/createTransactionModal";
+import DeleteTransactionModal from "../components/modals/deleteTransactionModal/deleteTransactionModal";
+import CreateTransactionModal from "../components/modals/createTransactionModal/createTransactionModal";
 
 export default function Transaction() {
   const [transactions, setTransactions] = useState([]);
@@ -49,11 +48,19 @@ export default function Transaction() {
         let categories_found = res.data;
         setCategories(categories_found);
 
-        categories_found.map((c) => {
-          setSubcategories(c.subcategory);
-        });
+        if (categories_found.length > 0) {
+          let allSubcategories = [];
+          categories_found.forEach((c) => {
+            allSubcategories = [...allSubcategories, ...c.subcategory];
+          });
+          setSubcategories(allSubcategories);
+        }
       })
       .catch((error) => console.log(error));
+  };
+
+  const handleNewTransaction = () => {
+    fetchTransactions();
   };
   const fetchAccounts = () => {
     api
@@ -97,6 +104,7 @@ export default function Transaction() {
         categories={categories}
         subcategories={subcategories}
         accounts={accounts}
+        onCreateTransaction={handleNewTransaction}
       />
       <div>
         <h1 className="text-3xl py-4">Transaction Query</h1>
@@ -121,24 +129,26 @@ export default function Transaction() {
               />
             </div>
 
-            <div className="flex items-center justify-center flex-col">
-              <div className="flex items-center">
-                <label htmlFor="fromDate">De</label>{" "}
+            <div className="flex items-center justify-center flex-col space-y-4">
+              <div className="flex items-center space-x-2">
+                <label htmlFor="fromDate" className="font-semibold">
+                  Data Inicial:
+                </label>
                 <input
                   type="date"
                   id="fromDate"
-                  className="data border border-gray-300 rounded-md"
+                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
-              <span>
-                <BsArrowRight />
-              </span>
-              <div className="flex items-center">
-                <label htmlFor="toDate">Até</label>{" "}
+
+              <div className="flex items-center space-x-2">
+                <label htmlFor="toDate" className="font-semibold">
+                  Data Final:
+                </label>
                 <input
                   type="date"
                   id="toDate"
-                  className="data border border-gray-300 rounded-md"
+                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
@@ -293,7 +303,7 @@ export default function Transaction() {
                     </tr>
                   ))
                 ) : (
-                  <div>There are no registered transactions</div>
+                  <td colSpan="10">There are no registered transactions</td>
                 )}
               </tbody>
             </table>

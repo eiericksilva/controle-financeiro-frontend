@@ -1,14 +1,17 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from "react";
-import Button from "../button/button";
-import { api } from "../../services/axios";
+
+import { api } from "../../../services/axios";
+import Button from "../../button/button";
+import { toast } from "react-toastify";
 
 const CreateTransactionModal = ({
+  categories = [],
   isOpen,
   onClose,
   tags,
-  categories,
   accounts,
+  onCreateTransaction,
 }) => {
   const [transactionType, setTransactionType] = useState("");
   const [amount, setAmount] = useState("");
@@ -25,7 +28,6 @@ const CreateTransactionModal = ({
 
   useEffect(() => {
     if (category) {
-      // Fetch subcategories for the selected category
       api
         .get(`/categories/${category}`)
         .then((res) => setSubcategories(res.data.subcategories))
@@ -33,6 +35,16 @@ const CreateTransactionModal = ({
     }
   }, [category]);
 
+  const handleCheckboxChange = (e) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setSelectedCategories((prev) => [...prev, value]);
+    } else {
+      setSelectedCategories((prev) => prev.filter((cat) => cat !== value));
+    }
+  };
+
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -87,10 +99,16 @@ const CreateTransactionModal = ({
     api
       .post(url, payload)
       .then((res) => {
+        toast.success("Transação registrada com sucesso!");
+        onCreateTransaction();
         console.log(res);
         onClose();
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log(error);
+
+        toast.error("Não foi possível registrar a Transação");
+      });
   };
 
   if (!isOpen) return null;
@@ -166,7 +184,7 @@ const CreateTransactionModal = ({
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
                 >
-                  <option value="">Select Category</option>
+                  <option value=""> Select Category</option>
                   {categories.map((cat) => (
                     <option key={cat.id} value={cat.id}>
                       {cat.name}
@@ -219,12 +237,12 @@ const CreateTransactionModal = ({
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 mb-2">
               Tags
             </label>
             <select
               multiple
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 p-2"
               value={selectedTags}
               onChange={(e) =>
                 setSelectedTags(
@@ -233,11 +251,18 @@ const CreateTransactionModal = ({
               }
             >
               {tags.map((tag) => (
-                <option key={tag.id} value={tag.id}>
+                <option
+                  key={tag.id}
+                  value={tag.id}
+                  className="p-2 hover:bg-indigo-100"
+                >
                   {tag.name}
                 </option>
               ))}
             </select>
+            <small className="text-gray-500 mt-1">
+              Seg hold Ctrl (ou Cmd) para selecionar múltiplas tags.
+            </small>
           </div>
 
           {transactionType === "TRANSFER" ? (

@@ -9,6 +9,9 @@ import Transaction from "./routes/transaction";
 import Tag from "./routes/tag";
 import Category from "./routes/category";
 import Account from "./routes/account";
+import Home from "./routes/home";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +22,10 @@ const router = createBrowserRouter([
       {
         path: "/user",
         element: <User />,
+      },
+      {
+        path: "/home",
+        element: <Home />,
       },
       {
         path: "/account",
@@ -43,5 +50,6 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <RouterProvider router={router} />
+    <ToastContainer />
   </React.StrictMode>
 );

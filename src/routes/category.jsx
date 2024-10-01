@@ -1,14 +1,19 @@
-import { useState } from "react";
-import Button from "../components/button/button";
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { api } from "../services/axios";
 import { AiOutlinePlus } from "react-icons/ai";
+import CreateCategoryModal from "../components/modals/createCategoryModal/createCategoryModal";
+import Button from "../components/button/button";
 
 export default function Category() {
   const [incomeCategories, setIncomeCategories] = useState([]);
   const [expenseCategories, setExpenseCategories] = useState([]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = () => {
     api
       .get("/categories")
       .then((res) => {
@@ -23,13 +28,13 @@ export default function Category() {
         setExpenseCategories(expense);
       })
       .catch((error) => console.log(error));
-  }, []);
+  };
 
   return (
     <div>
       <header className="flex justify-between ">
         <h1 className="text-3xl py-4">Category Query</h1>
-        <Button title="New Category">
+        <Button title="New Category" onClick={() => setModalIsOpen(true)}>
           <AiOutlinePlus />
         </Button>
       </header>
@@ -72,6 +77,14 @@ export default function Category() {
             <span> There are no Income Categories registered yet</span>
           )}
         </div>
+
+        {modalIsOpen && (
+          <CreateCategoryModal
+            isOpen={modalIsOpen}
+            onClose={() => setModalIsOpen(false)}
+            onCreateCategory={fetchCategories}
+          />
+        )}
       </div>
     </div>
   );

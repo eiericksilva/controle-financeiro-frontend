@@ -1,4 +1,4 @@
-import { CiUser, CiWallet } from "react-icons/ci";
+import { CiUser, CiWallet, CiHome } from "react-icons/ci";
 import { GrTransaction } from "react-icons/gr";
 import { SlTag } from "react-icons/sl";
 import { TbCategory } from "react-icons/tb";
@@ -9,6 +9,12 @@ const SideNavbar = ({ sidenavbarIsOpen }) => {
     <div className={`p-4 border-r-2 ${sidenavbarIsOpen ? "" : "hidden"}`}>
       <nav className="w-60">
         <ul>
+          <Link className="w-full :cursor-pointer  z-10 " to={`/home`}>
+            <li className="flex items-center gap-3 py-2  hover:text-red-950">
+              <CiHome size={22} />
+              Home
+            </li>
+          </Link>
           <Link className="w-full :cursor-pointer  z-10 " to={`/account`}>
             <li className="flex items-center gap-3 py-2  hover:text-red-950">
               <CiWallet size={22} />

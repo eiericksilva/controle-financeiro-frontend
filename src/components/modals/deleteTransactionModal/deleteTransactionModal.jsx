@@ -1,4 +1,4 @@
-import Button from "../button/button";
+import Button from "../../button/button";
 
 // eslint-disable-next-line react/prop-types
 const DeleteTransactionModal = ({ isOpen, onConfirm, onCancel }) => {

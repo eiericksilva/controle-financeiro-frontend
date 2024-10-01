@@ -15,7 +15,7 @@ export default function Tags() {
   }, []);
 
   return (
-    <div>
+    <>
       <header className="flex justify-between">
         <h1 className="text-3xl py-4">Tag Query</h1>
         <Button title="New Tag" className="text-sm">
@@ -24,8 +24,11 @@ export default function Tags() {
       </header>
       <hr className="" />
       <ul className="flex">
-        {tags && tags.map((tag) => <Tag key={tag.id} name={tag.name} />)}
+        {tags &&
+          tags.map((tag) => (
+            <Tag key={tag.id} color={tag.color} name={tag.name} />
+          ))}
       </ul>
-    </div>
+    </>
   );
 }
