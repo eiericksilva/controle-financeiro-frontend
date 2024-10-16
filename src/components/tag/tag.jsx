@@ -1,14 +1,7 @@
-import { HiOutlineDotsVertical } from "react-icons/hi";
-
-// eslint-disable-next-line react/prop-types
-const Tag = ({ name, color }) => {
+const Tag = ({ name }) => {
   return (
-    <div
-      className={`w-max font-thin text-xs rounded-lg text-center lowercase m-1 flex items-center justify-between px-1`}
-      style={{ backgroundColor: color }}
-    >
-      <div>{name}</div>
-      <HiOutlineDotsVertical className="hover:cursor-pointer" />
+    <div className={`p-2 text-xs font-medium rounded-full shadow-md`}>
+      {name}
     </div>
   );
 };

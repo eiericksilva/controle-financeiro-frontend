@@ -3,15 +3,20 @@ import { useLocation } from "react-router-dom";
 
 const Navbar = ({ sidenavbarIsOpen, setSidenavbarIsOpen }) => {
   const location = useLocation();
-  const currentRoute = location.pathname.split("/");
+  const currentRoute = location.pathname.split("/").pop();
+
   return (
-    <div className="bg-amber-200 p-4 flex gap-2 items-center h-max-14 shadow-md">
+    <div className="bg-white p-4 flex gap-4 items-center shadow-md border-b-4 border-blue-500">
       <CgMenu
-        size={23}
-        className="hover:cursor-pointer"
+        size={28}
+        className="text-blue-500 hover:text-blue-500 transition-colors duration-200 cursor-pointer"
         onClick={() => setSidenavbarIsOpen(!sidenavbarIsOpen)}
       />
-      {location && <p className="text-lg">{currentRoute}</p>}
+      {location && (
+        <p className="text-xl text-black font-semibold capitalize">
+          {currentRoute || "Home"}
+        </p>
+      )}
     </div>
   );
 };

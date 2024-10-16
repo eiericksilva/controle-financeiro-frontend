@@ -65,8 +65,8 @@ const CreateTransactionModal = ({
         endpoint = `${baseURL}/income`;
         payload = {
           ...payload,
-          category: { id: category },
-          subcategory: { id: subcategory },
+          category: category ? { id: category } : null,
+          subcategory: subcategory ? { id: subcategory } : null,
           expiredDate,
           destinationAccount: { id: destinationAccount },
         };
@@ -75,8 +75,8 @@ const CreateTransactionModal = ({
         endpoint = `${baseURL}/expense`;
         payload = {
           ...payload,
-          category: { id: category },
-          subcategory: { id: subcategory },
+          category: category ? { id: category } : null,
+          subcategory: subcategory ? { id: subcategory } : null,
           expiredDate,
           sourceAccount: { id: sourceAccount },
         };
@@ -116,11 +116,11 @@ const CreateTransactionModal = ({
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-10">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-5xl">
-        <h2 className="text-xl font-bold mb-4">Create Transaction</h2>
+        <h2 className="text-xl font-bold mb-4">Criar Transação</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
-              Transaction Type
+              Tipo da Transação
             </label>
             <select
               className="h-10 mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
@@ -128,16 +128,16 @@ const CreateTransactionModal = ({
               onChange={(e) => setTransactionType(e.target.value)}
               required
             >
-              <option value="">Select Type</option>
-              <option value="INCOME">Income</option>
-              <option value="EXPENSE">Expense</option>
-              <option value="TRANSFER">Transfer</option>
+              <option value="">Selecione um Tipo</option>
+              <option value="INCOME">Receita</option>
+              <option value="EXPENSE">Despesa</option>
+              <option value="TRANSFER">Transferência</option>
             </select>
           </div>
 
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 ">
-              Amount
+              Valor
             </label>
             <input
               type="number"
@@ -151,7 +151,7 @@ const CreateTransactionModal = ({
 
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
-              Description
+              Descrição
             </label>
             <input
               type="text"
@@ -163,7 +163,7 @@ const CreateTransactionModal = ({
 
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
-              Observation
+              Observação
             </label>
             <input
               type="text"
@@ -177,14 +177,14 @@ const CreateTransactionModal = ({
             <>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  Category
+                  Categoria
                 </label>
                 <select
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
                 >
-                  <option value=""> Select Category</option>
+                  <option value=""> Selecione uma Categoria</option>
                   {categories.map((cat) => (
                     <option key={cat.id} value={cat.id}>
                       {cat.name}
@@ -195,14 +195,14 @@ const CreateTransactionModal = ({
 
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  Subcategory
+                  Subcategoria
                 </label>
                 <select
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   value={subcategory}
                   onChange={(e) => setSubcategory(e.target.value)}
                 >
-                  <option value="">Select Subcategory</option>
+                  <option value="">Selecione uma Subcategoria</option>
                   {subcategories.map((sub) => (
                     <option key={sub.id} value={sub.id}>
                       {sub.name}
@@ -213,7 +213,7 @@ const CreateTransactionModal = ({
 
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  Expired Date
+                  Vencimento
                 </label>
                 <input
                   type="date"
@@ -227,7 +227,7 @@ const CreateTransactionModal = ({
 
           <div className="flex items-center gap-2 mb-4">
             <label className="block text-sm font-medium text-gray-700">
-              Is Confirmed
+              Status
             </label>
             <input
               type="checkbox"
@@ -261,7 +261,7 @@ const CreateTransactionModal = ({
               ))}
             </select>
             <small className="text-gray-500 mt-1">
-              Seg hold Ctrl (ou Cmd) para selecionar múltiplas tags.
+              Segure Ctrl (ou Cmd) para selecionar múltiplas tags.
             </small>
           </div>
 
@@ -269,14 +269,14 @@ const CreateTransactionModal = ({
             <>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  Source Account
+                  Conta de Origem
                 </label>
                 <select
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   value={sourceAccount}
                   onChange={(e) => setSourceAccount(e.target.value)}
                 >
-                  <option value="">Select Source Account</option>
+                  <option value="">Selecione a Conta de Origem</option>
                   {accounts.map((acc) => (
                     <option key={acc.id} value={acc.id}>
                       {acc.name}
@@ -287,14 +287,14 @@ const CreateTransactionModal = ({
 
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700">
-                  Destination Account
+                  Conta de Destino
                 </label>
                 <select
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   value={destinationAccount}
                   onChange={(e) => setDestinationAccount(e.target.value)}
                 >
-                  <option value="">Select Destination Account</option>
+                  <option value="">Selecione a Conta de Destino</option>
                   {accounts.map((acc) => (
                     <option key={acc.id} value={acc.id}>
                       {acc.name}
@@ -308,14 +308,14 @@ const CreateTransactionModal = ({
           {transactionType === "INCOME" ? (
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700">
-                Destination Account
+                Conta de Destino
               </label>
               <select
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 value={destinationAccount}
                 onChange={(e) => setDestinationAccount(e.target.value)}
               >
-                <option value="">Select Destination Account</option>
+                <option value="">Selecione a Conta de Destino</option>
                 {accounts.map((acc) => (
                   <option key={acc.id} value={acc.id}>
                     {acc.name}
@@ -328,14 +328,14 @@ const CreateTransactionModal = ({
           {transactionType === "EXPENSE" ? (
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700">
-                Source Account
+                Conta de Origem
               </label>
               <select
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 value={sourceAccount}
                 onChange={(e) => setSourceAccount(e.target.value)}
               >
-                <option value="">Select Source Account</option>
+                <option value="">Selecione a Conta de Origem</option>
                 {accounts.map((acc) => (
                   <option key={acc.id} value={acc.id}>
                     {acc.name}
@@ -353,7 +353,7 @@ const CreateTransactionModal = ({
             />
             <Button
               type="button"
-              className="px-4 py-2 hover:bg-amber-200"
+              className="px-4 py-2  bg-red-500 hover:bg-red-600"
               onClick={onClose}
               title="Cancel"
             />

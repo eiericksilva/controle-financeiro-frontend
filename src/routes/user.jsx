@@ -1,9 +1,8 @@
 import { VscEdit, VscTrash } from "react-icons/vsc";
 import Button from "../components/button/button";
-import SearchInput from "../components/searchInput/searchInput";
 import { useEffect, useState } from "react";
 import { api } from "../services/axios";
-import UserModal from "../components/userModal/userModal";
+import UserModal from "../components/modals/userModal/userModal";
 import { AiOutlinePlus } from "react-icons/ai";
 
 export default function User() {
@@ -41,7 +40,7 @@ export default function User() {
   };
 
   return (
-    <div id="user">
+    <>
       <UserModal
         isOpen={isOpen}
         setIsOpen={setIsOpen}
@@ -49,46 +48,35 @@ export default function User() {
         setCurrentUser={setCurrentUser}
         refreshUsers={refreshUsers}
       />
-      <div>
-        <header>
-          <h1 className="text-3xl py-4">User Query</h1>
-          <hr />
-        </header>
-        <section className="flex items-center justify-between py-4">
-          <h2 className="text-2xl">Users</h2>
-          <SearchInput placeholder="Search User" />
-          <Button title="New User" onClick={() => setIsOpen(true)}>
-            <AiOutlinePlus />
-          </Button>
-        </section>
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead>
+      <header className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-semibold text-black">
+          Gerenciamento de Usuários
+        </h1>
+        <Button title="Criar Usuário" onClick={() => setIsOpen(true)}>
+          <AiOutlinePlus className="text-lg" />
+        </Button>
+      </header>
+      <div className="overflow-x-auto shadow-md sm:rounded-lg">
+        <table className="min-w-full text-left text-sm ">
+          <thead className="bg-blue-500 text-xs uppercase text-white">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                ID
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Username
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                First Name
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Last Name
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Action
-              </th>
+              <th className="px-6 py-3">ID</th>
+              <th className="px-6 py-3">Username</th>
+              <th className="px-6 py-3">First Name</th>
+              <th className="px-6 py-3">Last Name</th>
+              <th className="px-6 py-3">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="bg-white divide-y divide-gray-200">
             {users.length ? (
               users.map((user) => (
                 <tr
                   key={user.id}
-                  className="hover:bg-amber-100 transition delay-75"
+                  className="hover:bg-blue-50 transition-colors"
                 >
-                  <td className="px-6 py-4 whitespace-nowrap">{user.id}</td>
+                  <td className="px-6 py-4 whitespace-nowrap font-medium text-black">
+                    {user.id}
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {user.username}
                   </td>
@@ -96,26 +84,30 @@ export default function User() {
                     {user.firstName}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    {user.lastName}{" "}
+                    {user.lastName}
                   </td>
-                  <td className="gap-2 flex items-center py-4">
+                  <td className="px-6 py-4 whitespace-nowrap flex items-center gap-2">
                     <VscEdit
-                      className="hover:cursor-pointer"
+                      className="text-blue-600 hover:text-blue-800 transition-colors duration-200 cursor-pointer"
                       onClick={() => handleEditUser(user)}
                     />
                     <VscTrash
-                      className="hover:cursor-pointer"
+                      className="text-red-600 hover:text-red-800 transition-colors duration-200 cursor-pointer"
                       onClick={() => handleTrashUser(user.id)}
                     />
                   </td>
                 </tr>
               ))
             ) : (
-              <span>There are no registered users</span>
+              <tr>
+                <td colSpan="5" className="px-6 py-4 text-center text-gray-500">
+                  There are no registered users
+                </td>
+              </tr>
             )}
           </tbody>
         </table>
       </div>
-    </div>
+    </>
   );
 }

@@ -12,37 +12,37 @@ const SideNavbar = ({ sidenavbarIsOpen }) => {
           <Link className="w-full :cursor-pointer  z-10 " to={`/home`}>
             <li className="flex items-center gap-3 py-2  hover:text-red-950">
               <CiHome size={22} />
-              Home
+              Início
             </li>
           </Link>
           <Link className="w-full :cursor-pointer  z-10 " to={`/account`}>
             <li className="flex items-center gap-3 py-2  hover:text-red-950">
               <CiWallet size={22} />
-              Account
+              Carteiras
             </li>
           </Link>
           <Link className="w-full  cursor-pointer z-10" to={`/category`}>
             <li className="flex items-center gap-3 py-2  hover:text-red-950">
               <TbCategory size={22} />
-              Category
+              Categorias
             </li>
           </Link>
           <Link className="w-full  cursor-pointer z-10" to={`/tag`}>
             <li className="flex items-center gap-3 py-2 hover:text-red-950">
               <SlTag size={18} />
-              Tag
+              Tags
             </li>
           </Link>
           <Link className="w-full  cursor-pointer z-10" to={`/transaction`}>
             <li className="flex items-center gap-3 py-2  hover:text-red-950">
               <GrTransaction size={20} />
-              Transaction
+              Transações
             </li>
           </Link>
           <Link className="w-full  cursor-pointer z-10" to={`/user`}>
             <li className="flex items-center gap-3 py-2  hover:text-red-950">
               <CiUser size={20} />
-              User
+              Usuários
             </li>
           </Link>
         </ul>

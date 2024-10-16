@@ -7,8 +7,9 @@ import { api } from "../services/axios";
 import Button from "../components/button/button";
 import { AiOutlinePlus } from "react-icons/ai";
 import { formatCurrency } from "../utils/formatCurrency";
-import DeleteTransactionModal from "../components/modals/deleteTransactionModal/deleteTransactionModal";
 import CreateTransactionModal from "../components/modals/createTransactionModal/createTransactionModal";
+import { toast } from "react-toastify";
+import DeleteConfirmModal from "../components/modals/deleteConfirmModal/deleteConfirmModal";
 
 export default function Transaction() {
   const [transactions, setTransactions] = useState([]);
@@ -17,7 +18,7 @@ export default function Transaction() {
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
   const [transactionToDelete, setTransactionToDelete] = useState(null);
-  const [deleteTransactionModalIsOpen, setDeleteTransactionModalIsOpen] =
+  const [deleteConfirmModalIsOpen, setDeleteConfirmModalIsOpen] =
     useState(false);
   const [createTransactionModalIsOpen, setCreateTransactionModalIsOpen] =
     useState(false);
@@ -71,7 +72,7 @@ export default function Transaction() {
 
   const handleTrashTransaction = (transactionId) => {
     setTransactionToDelete(transactionId);
-    setDeleteTransactionModalIsOpen(true);
+    setDeleteConfirmModalIsOpen(true);
   };
 
   const confirmDeleteTransaction = () => {
@@ -81,21 +82,25 @@ export default function Transaction() {
       .delete(`/transactions/${transactionToDelete}`)
       .then((res) => {
         console.log(res);
+        toast.success("Transação excluida com sucesso!");
         fetchTransactions();
       })
-      .catch((error) => console.log(error))
+      .catch((error) => {
+        toast.error("Não foi possível excluir a Transação");
+        console.log(error);
+      })
       .finally(() => {
-        setDeleteTransactionModalIsOpen(false);
+        setDeleteConfirmModalIsOpen(false);
         setTransactionToDelete(null);
       });
   };
 
   return (
-    <div>
-      <DeleteTransactionModal
-        isOpen={deleteTransactionModalIsOpen}
+    <>
+      <DeleteConfirmModal
+        isOpen={deleteConfirmModalIsOpen}
         onConfirm={confirmDeleteTransaction}
-        onCancel={() => setDeleteTransactionModalIsOpen(false)}
+        onCancel={() => setDeleteConfirmModalIsOpen(false)}
       />
       <CreateTransactionModal
         isOpen={createTransactionModalIsOpen}
@@ -106,210 +111,128 @@ export default function Transaction() {
         accounts={accounts}
         onCreateTransaction={handleNewTransaction}
       />
-      <div>
-        <h1 className="text-3xl py-4">Transaction Query</h1>
-        <hr />
-        <div>
-          <div
-            id="containerFilter"
-            className="flex p-4 py-8 mb-8 min-w-60 rounded-lg  gap-4 flex-1 justify-between items-start shadow-lg"
-          >
-            <div>
-              <label
-                htmlFor="search_id"
-                className="block text-sm font-medium leading-5 text-gray-700"
-              >
-                ID:
-              </label>
-              <input
-                type="text"
-                name="search_id"
-                id="search_id"
-                className="mt-1 form-input block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
-              />
-            </div>
-
-            <div className="flex items-center justify-center flex-col space-y-4">
-              <div className="flex items-center space-x-2">
-                <label htmlFor="fromDate" className="font-semibold">
-                  Data Inicial:
-                </label>
-                <input
-                  type="date"
-                  id="fromDate"
-                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <label htmlFor="toDate" className="font-semibold">
-                  Data Final:
-                </label>
-                <input
-                  type="date"
-                  id="toDate"
-                  className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-            </div>
-
-            <div className="w-full max-w-xs">
-              <label
-                htmlFor="category_type"
-                className="block text-sm font-medium leading-5 text-gray-700"
-              >
-                Transaction Type
-              </label>
-              <select
-                id="category_type"
-                name="category_type"
-                className="mt-1 form-select block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
-              >
-                <option value="INCOME">Income</option>
-                <option value="EXPENSE">Expense</option>
-                <option value="TRANSFER">Transfer</option>
-              </select>
-            </div>
-
-            <div className="mb-4">
-              <label
-                htmlFor="tagFilter"
-                className="block text-sm font-medium leading-5 text-gray-700"
-              >
-                Tag
-              </label>
-              <select
-                id="tagFilter"
-                className="mt-1 form-select block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
-              >
-                <option value="">Todas as Tags</option>
-                {tags.map((tag) => (
-                  <option key={tag.id} value={tag.name}>
-                    {tag.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-          <section className="flex items-center justify-between py-4">
-            <div className=" items-center gap-1">
-              <h2 className="text-2xl">Transactions</h2>
-              <span className="text-sm font-thin">
-                (Clique em uma Transaction para ver detalhes)
-              </span>
-            </div>
-            <Button
-              title="New Transaction"
-              onClick={() => setCreateTransactionModalIsOpen(true)}
-            >
-              <AiOutlinePlus />
-            </Button>
-          </section>
-          <div className="overflow-x-scroll">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead>
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    ID
-                  </th>
-
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Transaction Type
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Amount
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Category
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Subcategory
-                  </th>
-
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Expired Date
-                  </th>
-
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Is Confirmed
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Tag
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Source Account
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Destination Account
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
+      <header className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-semibold text-black">
+          Gerenciamento de Transações
+        </h1>
+        <Button
+          title="Criar Transação"
+          onClick={() => setCreateTransactionModalIsOpen(true)}
+        >
+          <AiOutlinePlus className="text-lg" />
+        </Button>
+      </header>
+      <div className="overflow-x-auto shadow-md sm:rounded-lg">
+        <table className="min-w-full text-left text-sm">
+          <thead className="bg-blue-500 text-xs uppercase text-white">
+            <tr>
+              <th className="px-6 py-3">ID</th>
+              <th className="px-6 py-3">Tipo</th>
+              <th className="px-6 py-3">Valor</th>
+              <th className="px-6 py-3">Categoria</th>
+              <th className="px-6 py-3">Subcategoria</th>
+              <th className="px-6 py-3">Vencimento</th>
+              <th className="px-6 py-3">Status</th>
+              <th className="px-6 py-3">Tags</th>
+              <th className="px-6 py-3">Conta de Origem</th>
+              <th className="px-6 py-3">Conta de Destino</th>
+              <th className="px-6 py-3">Ações</th>
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {transactions.length ? (
+              transactions.map((transaction) => (
+                <tr
+                  key={transaction.id}
+                  className="hover:bg-blue-50 transition-colors"
+                >
+                  <td className="px-6 py-4 whitespace-nowrap font-medium text-black">
+                    {transaction.id}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {transaction.transactionType}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap font-semibold text-green-600">
+                    {formatCurrency(transaction.amount)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {transaction?.category?.name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {transaction.subcategory?.name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {transaction.expiredDate}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {transaction.isConfirmed ? (
+                      <FcCheckmark className="text-xl" />
+                    ) : (
+                      <TfiAlert className="text-red-600 text-xl" />
+                    )}
+                  </td>
+                  <td className="flex px-6 py-4 whitespace-nowrap align-middle">
+                    {transaction.tags.map((tag) => (
+                      <Tag key={tag.id} name={tag.name} />
+                    ))}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {transaction.sourceAccount?.name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {transaction.destinationAccount?.name}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap flex items-center gap-2">
+                    <VscTrash
+                      className="text-red-600 hover:text-red-800 transition-colors cursor-pointer"
+                      onClick={() => handleTrashTransaction(transaction.id)}
+                    />
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {transactions.length ? (
-                  transactions.map((transaction) => (
-                    <tr
-                      key={transaction.id}
-                      className="hover:bg-amber-100 transition delay-75"
-                    >
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {transaction.id}
-                      </td>
-
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {transaction.transactionType}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {formatCurrency(transaction.amount)}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {transaction?.category?.name}{" "}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {transaction.subcategory?.name}{" "}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {transaction.expiredDate}{" "}
-                      </td>
-
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {transaction.isConfirmed ? (
-                          <FcCheckmark />
-                        ) : (
-                          <TfiAlert className="text-red-600" />
-                        )}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap flex">
-                        {transaction.tags.map((tag) => (
-                          <Tag key={tag.id} name={tag.name} />
-                        ))}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {transaction.sourceAccount?.name}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {transaction.destinationAccount?.name}
-                      </td>
-                      <td className="gap-2 flex items-center py-4">
-                        <VscTrash
-                          className="hover:cursor-pointer"
-                          onClick={() => {
-                            handleTrashTransaction(transaction.id);
-                          }}
-                        />
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <td colSpan="10">There are no registered transactions</td>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan="11"
+                  className="px-6 py-4 text-center text-gray-500"
+                >
+                  Não há Transaçõs Registradas no momento
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
-    </div>
+    </>
   );
 }
+
+/* 
+
+ 
+const handleTrashTransaction = (transactionId) => {
+    setTransactionToDelete(transactionId);
+    setDeleteConfirmModalIsOpen(true);
+  };
+
+  const confirmDeleteTransaction = () => {
+    if (!transactionToDelete) return;
+
+    api
+      .delete(`/transactions/${transactionToDelete}`)
+      .then((res) => {
+        console.log(res);
+        toast.success("Transação excluida com sucesso!");
+        fetchTransactions();
+      })
+      .catch((error) => {
+        toast.error("Não foi possível excluir a Transação");
+        console.log(error);
+      })
+      .finally(() => {
+        setDeleteConfirmModalIsOpen(false);
+        setTransactionToDelete(null);
+      });
+  };
+
+*/
