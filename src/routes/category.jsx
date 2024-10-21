@@ -197,7 +197,7 @@ export default function Category() {
         categoryId
       );
       rows.push(
-        <tr key={`subcategories-${categoryId}`}>
+        <tr key={categoryId}>
           <td className="px-6 py-2 pl-8">{subcategories}</td>
         </tr>
       );

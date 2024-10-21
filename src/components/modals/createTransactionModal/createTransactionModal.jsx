@@ -115,7 +115,14 @@ const CreateTransactionModal = ({
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-10">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-5xl">
+      <div
+        className="bg-white p-8 rounded-lg shadow-lg w-full max-w-5xl"
+        style={{
+          maxHeight: "90vh",
+          overflowY: "auto",
+          height: "auto",
+        }}
+      >
         <h2 className="text-xl font-bold mb-4">Criar Transação</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -180,16 +187,21 @@ const CreateTransactionModal = ({
                   Categoria
                 </label>
                 <select
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  className="mt-1 h-10 p-1  block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   value={category}
-                  onChange={(e) => setCategory(e.target.value)}
+                  onChange={(e) => {
+                    setCategory(e.target.value);
+                    console.log(category);
+                  }}
                 >
                   <option value=""> Selecione uma Categoria</option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </option>
-                  ))}
+                  {categories
+                    .filter((cat) => cat.categoryType === transactionType)
+                    .map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </option>
+                    ))}
                 </select>
               </div>
 
@@ -198,7 +210,7 @@ const CreateTransactionModal = ({
                   Subcategoria
                 </label>
                 <select
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  className="mt-1 h-10 p-1  block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   value={subcategory}
                   onChange={(e) => setSubcategory(e.target.value)}
                 >
@@ -217,7 +229,7 @@ const CreateTransactionModal = ({
                 </label>
                 <input
                   type="date"
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  className="mt-1 h-10 p-1  block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   value={expiredDate}
                   onChange={(e) => setExpiredDate(e.target.value)}
                 />
@@ -272,7 +284,7 @@ const CreateTransactionModal = ({
                   Conta de Origem
                 </label>
                 <select
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  className="mt-1 h-10 p-1  block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   value={sourceAccount}
                   onChange={(e) => setSourceAccount(e.target.value)}
                 >
@@ -290,7 +302,7 @@ const CreateTransactionModal = ({
                   Conta de Destino
                 </label>
                 <select
-                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  className="mt-1 h-10 p-1  block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                   value={destinationAccount}
                   onChange={(e) => setDestinationAccount(e.target.value)}
                 >
@@ -311,7 +323,7 @@ const CreateTransactionModal = ({
                 Conta de Destino
               </label>
               <select
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                className="mt-1 h-10 p-1  block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 value={destinationAccount}
                 onChange={(e) => setDestinationAccount(e.target.value)}
               >
@@ -331,7 +343,7 @@ const CreateTransactionModal = ({
                 Conta de Origem
               </label>
               <select
-                className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                className="mt-1 h-10 p-1  block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
                 value={sourceAccount}
                 onChange={(e) => setSourceAccount(e.target.value)}
               >
@@ -349,13 +361,13 @@ const CreateTransactionModal = ({
             <Button
               type="submit"
               className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded"
-              title="Create"
+              title="Criar"
             />
             <Button
               type="button"
               className="px-4 py-2  bg-red-500 hover:bg-red-600"
               onClick={onClose}
-              title="Cancel"
+              title="Cancelar"
             />
           </div>
         </form>
