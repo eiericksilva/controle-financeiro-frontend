@@ -150,7 +150,6 @@ export default function Transaction() {
         <table className="min-w-full text-left text-sm">
           <thead className="bg-blue-500 text-xs uppercase text-white">
             <tr>
-              <th className="px-6 py-3">ID</th>
               <th className="px-6 py-3">Tipo</th>
               <th className="px-6 py-3">Descrição</th>
               <th className="px-6 py-3">Valor</th>
@@ -171,9 +170,6 @@ export default function Transaction() {
                   key={transaction.id}
                   className="hover:bg-blue-50 transition-colors"
                 >
-                  <td className="px-6 py-4 whitespace-nowrap font-medium text-black">
-                    {transaction.id}
-                  </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {transaction.transactionType}
                   </td>
@@ -189,9 +185,9 @@ export default function Transaction() {
                   <td className="px-6 py-4 whitespace-nowrap">
                     {transaction.subcategory?.name}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {transaction.expiredDate}
-                  </td>
+                  {new Date(transaction.expiredDate).toLocaleDateString(
+                    "pt-BR"
+                  )}
                   <td className="px-6 py-4 whitespace-nowrap">
                     {transaction.isConfirmed ? (
                       <FcCheckmark className="text-xl" />
