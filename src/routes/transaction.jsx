@@ -13,6 +13,7 @@ import DeleteConfirmModal from "../components/modals/deleteConfirmModal/deleteCo
 
 export default function Transaction() {
   const [transactions, setTransactions] = useState([]);
+  const [filteredTransactions, setFilteredTransactions] = useState([]); // Novo estado para armazenar transações filtradas
   const [tags, setTags] = useState([]);
   const [accounts, setAccounts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -22,6 +23,10 @@ export default function Transaction() {
     useState(false);
   const [createTransactionModalIsOpen, setCreateTransactionModalIsOpen] =
     useState(false);
+
+  // Estados para o filtro
+  const [filterColumn, setFilterColumn] = useState("id");
+  const [filterValue, setFilterValue] = useState("");
 
   useEffect(() => {
     fetchTransactions();
@@ -33,15 +38,20 @@ export default function Transaction() {
   const fetchTransactions = () => {
     api
       .get("/transactions")
-      .then((res) => setTransactions(res.data))
+      .then((res) => {
+        setTransactions(res.data);
+        setFilteredTransactions(res.data);
+      })
       .catch((error) => console.log(error));
   };
+
   const fetchTags = () => {
     api
       .get("/tags")
       .then((res) => setTags(res.data))
       .catch((error) => console.log(error));
   };
+
   const fetchCategories = () => {
     api
       .get("/categories")
@@ -60,14 +70,15 @@ export default function Transaction() {
       .catch((error) => console.log(error));
   };
 
-  const handleNewTransaction = () => {
-    fetchTransactions();
-  };
   const fetchAccounts = () => {
     api
       .get("/accounts")
       .then((res) => setAccounts(res.data))
       .catch((error) => console.log(error));
+  };
+
+  const handleNewTransaction = () => {
+    fetchTransactions();
   };
 
   const handleTrashTransaction = (transactionId) => {
@@ -95,6 +106,15 @@ export default function Transaction() {
       });
   };
 
+  const handleFilter = () => {
+    const filtered = transactions.filter((transaction) =>
+      String(transaction[filterColumn])
+        .toLowerCase()
+        .includes(filterValue.toLowerCase())
+    );
+    setFilteredTransactions(filtered);
+  };
+
   return (
     <>
       <DeleteConfirmModal
@@ -111,6 +131,7 @@ export default function Transaction() {
         accounts={accounts}
         onCreateTransaction={handleNewTransaction}
       />
+
       <header className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-semibold text-black">
           Gerenciamento de Transações
@@ -122,12 +143,41 @@ export default function Transaction() {
           <AiOutlinePlus className="text-lg" />
         </Button>
       </header>
+
+      {/* Filtros */}
+      <div className="mb-6">
+        <select
+          value={filterColumn}
+          onChange={(e) => setFilterColumn(e.target.value)}
+          className="border border-gray-300 rounded px-2 py-1"
+        >
+          <option value="id">ID</option>
+          <option value="transactionType">Tipo</option>
+          <option value="description">Descrição</option>
+          <option value="amount">Valor</option>
+          <option value="category">Categoria</option>
+          <option value="subcategory">Subcategoria</option>
+          <option value="expiredDate">Vencimento</option>
+          <option value="sourceAccount">Conta de Origem</option>
+          <option value="destinationAccount">Conta de Destino</option>
+        </select>
+        <input
+          type="text"
+          value={filterValue}
+          onChange={(e) => setFilterValue(e.target.value)}
+          placeholder="Valor do filtro"
+          className="ml-2 border border-gray-300 rounded px-2 py-1"
+        />
+        <Button title="Filtrar" onClick={handleFilter} className="ml-2" />
+      </div>
+
       <div className="overflow-x-auto shadow-md sm:rounded-lg">
         <table className="min-w-full text-left text-sm">
           <thead className="bg-blue-500 text-xs uppercase text-white">
             <tr>
               <th className="px-6 py-3">ID</th>
               <th className="px-6 py-3">Tipo</th>
+              <th className="px-6 py-3">Descrição</th>
               <th className="px-6 py-3">Valor</th>
               <th className="px-6 py-3">Categoria</th>
               <th className="px-6 py-3">Subcategoria</th>
@@ -140,8 +190,8 @@ export default function Transaction() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {transactions.length ? (
-              transactions.map((transaction) => (
+            {filteredTransactions.length ? (
+              filteredTransactions.map((transaction) => (
                 <tr
                   key={transaction.id}
                   className="hover:bg-blue-50 transition-colors"
@@ -151,6 +201,9 @@ export default function Transaction() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     {transaction.transactionType}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {transaction.description}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap font-semibold text-green-600">
                     {formatCurrency(transaction.amount)}
@@ -193,10 +246,10 @@ export default function Transaction() {
             ) : (
               <tr>
                 <td
-                  colSpan="11"
+                  colSpan="12"
                   className="px-6 py-4 text-center text-gray-500"
                 >
-                  Não há Transaçõs Registradas no momento
+                  Não há Transações Registradas no momento
                 </td>
               </tr>
             )}
@@ -206,33 +259,3 @@ export default function Transaction() {
     </>
   );
 }
-
-/* 
-
- 
-const handleTrashTransaction = (transactionId) => {
-    setTransactionToDelete(transactionId);
-    setDeleteConfirmModalIsOpen(true);
-  };
-
-  const confirmDeleteTransaction = () => {
-    if (!transactionToDelete) return;
-
-    api
-      .delete(`/transactions/${transactionToDelete}`)
-      .then((res) => {
-        console.log(res);
-        toast.success("Transação excluida com sucesso!");
-        fetchTransactions();
-      })
-      .catch((error) => {
-        toast.error("Não foi possível excluir a Transação");
-        console.log(error);
-      })
-      .finally(() => {
-        setDeleteConfirmModalIsOpen(false);
-        setTransactionToDelete(null);
-      });
-  };
-
-*/

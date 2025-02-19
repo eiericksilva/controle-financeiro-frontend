@@ -15,9 +15,12 @@ const CreateTransactionModal = ({
 }) => {
   const [transactionType, setTransactionType] = useState("");
   const [amount, setAmount] = useState("");
+  const [installments, setInstallments] = useState(1);
   const [description, setDescription] = useState("");
   const [observation, setObservation] = useState("");
   const [isConfirmed, setIsConfirmed] = useState(false);
+  const [isRecurrent, setIsRecurrent] = useState(false);
+  const [isInstallment, setIsInstallment] = useState(false);
   const [selectedTags, setSelectedTags] = useState([]);
   const [sourceAccount, setSourceAccount] = useState("");
   const [destinationAccount, setDestinationAccount] = useState("");
@@ -25,6 +28,7 @@ const CreateTransactionModal = ({
   const [subcategory, setSubcategory] = useState("");
   const [subcategories, setSubcategories] = useState([]);
   const [expiredDate, setExpiredDate] = useState("");
+  const [finalDateRecurrent, setFinalDateRecurrent] = useState("");
 
   useEffect(() => {
     if (category) {
@@ -55,6 +59,8 @@ const CreateTransactionModal = ({
       description,
       observation,
       isConfirmed,
+      isRecurrent,
+      isInstallment,
       tags: selectedTags.map((tagId) => ({ id: tagId })),
     };
 
@@ -78,6 +84,8 @@ const CreateTransactionModal = ({
           category: category ? { id: category } : null,
           subcategory: subcategory ? { id: subcategory } : null,
           expiredDate,
+          finalDateRecurrent,
+          installments,
           sourceAccount: { id: sourceAccount },
         };
         break;
@@ -155,6 +163,38 @@ const CreateTransactionModal = ({
               placeholder="10.54"
             />
           </div>
+          {transactionType === "EXPENSE" && (
+            <>
+              <div className="flex items-center gap-2 mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Parcelado?
+                </label>
+                <input
+                  type="checkbox"
+                  checked={isInstallment}
+                  onChange={(e) => setIsInstallment(e.target.checked)}
+                />
+              </div>
+
+              {isInstallment && (
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 ">
+                    Quantidade de Parcelas
+                  </label>
+                  <input
+                    type="number"
+                    step="1"
+                    min="1"
+                    className="p-1 mt-1 h-10 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    value={installments}
+                    onChange={(e) => setInstallments(e.target.value)}
+                    required
+                    placeholder="1"
+                  />
+                </div>
+              )}
+            </>
+          )}
 
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700">
@@ -247,6 +287,31 @@ const CreateTransactionModal = ({
               onChange={(e) => setIsConfirmed(e.target.checked)}
             />
           </div>
+
+          <div className="flex items-center gap-2 mb-4">
+            <label className="block text-sm font-medium text-gray-700">
+              Recorrente?
+            </label>
+            <input
+              type="checkbox"
+              checked={isRecurrent}
+              onChange={(e) => setIsRecurrent(e.target.checked)}
+            />
+          </div>
+
+          {isRecurrent && (
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Data final da recorrência
+              </label>
+              <input
+                type="date"
+                className="mt-1 h-10 p-1  block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                value={finalDateRecurrent}
+                onChange={(e) => setFinalDateRecurrent(e.target.value)}
+              />
+            </div>
+          )}
 
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-2">
