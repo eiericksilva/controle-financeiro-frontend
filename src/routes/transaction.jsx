@@ -145,31 +145,6 @@ export default function Transaction() {
       </header>
 
       {/* Filtros */}
-      <div className="mb-6">
-        <select
-          value={filterColumn}
-          onChange={(e) => setFilterColumn(e.target.value)}
-          className="border border-gray-300 rounded px-2 py-1"
-        >
-          <option value="id">ID</option>
-          <option value="transactionType">Tipo</option>
-          <option value="description">Descrição</option>
-          <option value="amount">Valor</option>
-          <option value="category">Categoria</option>
-          <option value="subcategory">Subcategoria</option>
-          <option value="expiredDate">Vencimento</option>
-          <option value="sourceAccount">Conta de Origem</option>
-          <option value="destinationAccount">Conta de Destino</option>
-        </select>
-        <input
-          type="text"
-          value={filterValue}
-          onChange={(e) => setFilterValue(e.target.value)}
-          placeholder="Valor do filtro"
-          className="ml-2 border border-gray-300 rounded px-2 py-1"
-        />
-        <Button title="Filtrar" onClick={handleFilter} className="ml-2" />
-      </div>
 
       <div className="overflow-x-auto shadow-md sm:rounded-lg">
         <table className="min-w-full text-left text-sm">

@@ -20,6 +20,7 @@ const CreateTransactionModal = ({
   const [observation, setObservation] = useState("");
   const [isConfirmed, setIsConfirmed] = useState(false);
   const [isRecurrent, setIsRecurrent] = useState(false);
+  const [recurrentEndDate, setRecurrentEndDate] = useState(false);
   const [isInstallment, setIsInstallment] = useState(false);
   const [selectedTags, setSelectedTags] = useState([]);
   const [sourceAccount, setSourceAccount] = useState("");
@@ -28,7 +29,6 @@ const CreateTransactionModal = ({
   const [subcategory, setSubcategory] = useState("");
   const [subcategories, setSubcategories] = useState([]);
   const [expiredDate, setExpiredDate] = useState("");
-  const [finalDateRecurrent, setFinalDateRecurrent] = useState("");
 
   useEffect(() => {
     if (category) {
@@ -84,8 +84,9 @@ const CreateTransactionModal = ({
           category: category ? { id: category } : null,
           subcategory: subcategory ? { id: subcategory } : null,
           expiredDate,
-          finalDateRecurrent,
           installments,
+          isRecurrent,
+          recurrentEndDate,
           sourceAccount: { id: sourceAccount },
         };
         break;
@@ -149,6 +150,85 @@ const CreateTransactionModal = ({
               <option value="TRANSFER">Transferência</option>
             </select>
           </div>
+          {transactionType === "TRANSFER" ? (
+            <>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Conta de Origem
+                </label>
+                <select
+                  className="mt-1 h-10 p-1  block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  value={sourceAccount}
+                  onChange={(e) => setSourceAccount(e.target.value)}
+                >
+                  <option value="">Selecione a Conta de Origem</option>
+                  {accounts.map((acc) => (
+                    <option key={acc.id} value={acc.id}>
+                      {acc.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700">
+                  Conta de Destino
+                </label>
+                <select
+                  className="mt-1 h-10 p-1  block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                  value={destinationAccount}
+                  onChange={(e) => setDestinationAccount(e.target.value)}
+                >
+                  <option value="">Selecione a Conta de Destino</option>
+                  {accounts.map((acc) => (
+                    <option key={acc.id} value={acc.id}>
+                      {acc.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </>
+          ) : null}
+
+          {transactionType === "INCOME" ? (
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Conta de Destino
+              </label>
+              <select
+                className="mt-1 h-10 p-1  block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                value={destinationAccount}
+                onChange={(e) => setDestinationAccount(e.target.value)}
+              >
+                <option value="">Selecione a Conta de Destino</option>
+                {accounts.map((acc) => (
+                  <option key={acc.id} value={acc.id}>
+                    {acc.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : null}
+
+          {transactionType === "EXPENSE" ? (
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">
+                Conta de Origem
+              </label>
+              <select
+                className="mt-1 h-10 p-1  block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+                value={sourceAccount}
+                onChange={(e) => setSourceAccount(e.target.value)}
+              >
+                <option value="">Selecione a Conta de Origem</option>
+                {accounts.map((acc) => (
+                  <option key={acc.id} value={acc.id}>
+                    {acc.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ) : null}
 
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 ">
@@ -169,11 +249,21 @@ const CreateTransactionModal = ({
                 <label className="block text-sm font-medium text-gray-700">
                   Parcelado?
                 </label>
-                <input
-                  type="checkbox"
-                  checked={isInstallment}
-                  onChange={(e) => setIsInstallment(e.target.checked)}
-                />
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    className="sr-only peer"
+                    checked={isInstallment}
+                    onChange={(e) => setIsInstallment(e.target.checked)}
+                  />
+                  <div className="w-11 h-6 bg-gray-300 peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer dark:bg-gray-600 peer-checked:bg-indigo-600 relative">
+                    <span
+                      className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform ${
+                        isInstallment ? "translate-x-5" : ""
+                      }`}
+                    ></span>
+                  </div>
+                </label>
               </div>
 
               {isInstallment && (
@@ -276,27 +366,47 @@ const CreateTransactionModal = ({
               </div>
             </>
           ) : null}
-
           <div className="flex items-center gap-2 mb-4">
             <label className="block text-sm font-medium text-gray-700">
-              Status
+              Efetivada?
             </label>
-            <input
-              type="checkbox"
-              checked={isConfirmed}
-              onChange={(e) => setIsConfirmed(e.target.checked)}
-            />
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                checked={isConfirmed}
+                onChange={(e) => setIsConfirmed(e.target.checked)}
+              />
+              <div className="w-11 h-6 bg-gray-300 peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer dark:bg-gray-600 peer-checked:bg-indigo-600 relative">
+                <span
+                  className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform ${
+                    isConfirmed ? "translate-x-5" : ""
+                  }`}
+                ></span>
+              </div>
+            </label>
           </div>
 
           <div className="flex items-center gap-2 mb-4">
             <label className="block text-sm font-medium text-gray-700">
               Recorrente?
             </label>
-            <input
-              type="checkbox"
-              checked={isRecurrent}
-              onChange={(e) => setIsRecurrent(e.target.checked)}
-            />
+            <label className="relative inline-flex items-center cursor-pointer">
+              <input
+                type="checkbox"
+                className="sr-only peer"
+                value={isRecurrent}
+                checked={isRecurrent}
+                onChange={(e) => setIsRecurrent(e.target.checked)}
+              />
+              <div className="w-11 h-6 bg-gray-300 peer-focus:ring-4 peer-focus:ring-indigo-300 rounded-full peer dark:bg-gray-600 peer-checked:bg-indigo-600 relative">
+                <span
+                  className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform ${
+                    isRecurrent ? "translate-x-5" : ""
+                  }`}
+                ></span>
+              </div>
+            </label>
           </div>
 
           {isRecurrent && (
@@ -307,8 +417,8 @@ const CreateTransactionModal = ({
               <input
                 type="date"
                 className="mt-1 h-10 p-1  block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                value={finalDateRecurrent}
-                onChange={(e) => setFinalDateRecurrent(e.target.value)}
+                value={recurrentEndDate}
+                onChange={(e) => setRecurrentEndDate(e.target.value)}
               />
             </div>
           )}
@@ -341,86 +451,6 @@ const CreateTransactionModal = ({
               Segure Ctrl (ou Cmd) para selecionar múltiplas tags.
             </small>
           </div>
-
-          {transactionType === "TRANSFER" ? (
-            <>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  Conta de Origem
-                </label>
-                <select
-                  className="mt-1 h-10 p-1  block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                  value={sourceAccount}
-                  onChange={(e) => setSourceAccount(e.target.value)}
-                >
-                  <option value="">Selecione a Conta de Origem</option>
-                  {accounts.map((acc) => (
-                    <option key={acc.id} value={acc.id}>
-                      {acc.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700">
-                  Conta de Destino
-                </label>
-                <select
-                  className="mt-1 h-10 p-1  block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                  value={destinationAccount}
-                  onChange={(e) => setDestinationAccount(e.target.value)}
-                >
-                  <option value="">Selecione a Conta de Destino</option>
-                  {accounts.map((acc) => (
-                    <option key={acc.id} value={acc.id}>
-                      {acc.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </>
-          ) : null}
-
-          {transactionType === "INCOME" ? (
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Conta de Destino
-              </label>
-              <select
-                className="mt-1 h-10 p-1  block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                value={destinationAccount}
-                onChange={(e) => setDestinationAccount(e.target.value)}
-              >
-                <option value="">Selecione a Conta de Destino</option>
-                {accounts.map((acc) => (
-                  <option key={acc.id} value={acc.id}>
-                    {acc.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ) : null}
-
-          {transactionType === "EXPENSE" ? (
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700">
-                Conta de Origem
-              </label>
-              <select
-                className="mt-1 h-10 p-1  block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                value={sourceAccount}
-                onChange={(e) => setSourceAccount(e.target.value)}
-              >
-                <option value="">Selecione a Conta de Origem</option>
-                {accounts.map((acc) => (
-                  <option key={acc.id} value={acc.id}>
-                    {acc.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          ) : null}
 
           <div className="flex justify-end gap-2">
             <Button
